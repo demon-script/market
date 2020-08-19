@@ -37,10 +37,24 @@ class Category extends ConnectionDB
      * @param string $description
      * @return None
      */
-    public function new_cat($name,$description)
+    public function new_cat($nm,$dscrptn)
     {
-        $query = "INSERT INTO category (name, description) VALUES ('$name', '$description');"; 
+        $query = "INSERT INTO category (name, description) VALUES ('$nm', '$dscrptn');"; 
         parent::general_query($query);
+    }
+    
+    /**
+     * Procedure to update caregory
+     * Procedimiento para actualizar categoría
+     * @param int $id_ctgry
+     * @param string $nm
+     * @param string $dscrptn
+     */
+    public function update_cat($id_ctgry,$nm,$dscrptn)
+    {
+        $query = "UPDATE category SET name ='$nm', description = '$dscrptn' WHERE id ='$id_ctgry'";
+        parent::general_query($query);
+            
     }
     
     /**
