@@ -130,7 +130,8 @@ class ConnectionDB extends ConnectData
         }
         protected function break_connection()
         {
-            unset(self::$connex);
+//            unset(self::$connex);
+//            exit();
             
         }
 }

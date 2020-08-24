@@ -15,6 +15,10 @@
      * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /*
+ * para obtener más información sobre los términos de la licencia
+ * GNU/GPL V3, leer el archivo licence.md
+ * 
+ * 
  * Código Personalizado en el archivo de Licencia GNU/GPL V3 en Netbeans:...
   
 <#if licenseFirst??>

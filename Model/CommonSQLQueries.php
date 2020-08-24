@@ -15,13 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
+
+require_once './Config/ConnectionDB.php';
+/**#@+
  * Description of CommonSQLQueries:...
- * Inherit from the ConnectionDB class to initialize the connection to the Database
- * Hereda de la clase ConexionDB para disparar la conexión a la Base de Datos
+ * CommonSQLQueries Inherit from the ConnectionDB class to initialize the connection to the Database
+ * CommonSQLQueries Hereda de la clase ConexionDB para disparar la conexión a la Base de Datos
  * @author demonscript
  */
-require_once './Config/ConnectionDB.php';
 class CommonSQLQueries extends ConnectionDB
 {
     public function __construct()
@@ -70,6 +71,20 @@ class CommonSQLQueries extends ConnectionDB
     }
     
     /**
+     * procedimiento para contar registros en una tabla según el contenido de un campo
+     * procedure to counting records in a table based on the content of a field
+     * @param string $name_table
+     * @param string $field_name
+     * @param string $word
+     * @return 
+     */
+    public function count_by_field($name_table,$field_name,$word)
+    {
+        $query = "SELECT COUNT(*) AS number FROM $name_table WHERE $field_name='$word'";
+        parent::general_query($query);
+    }
+    
+    /**
      * Procedure to Update a Record Status
      * Procedimiento para actualizar el estado de un registro
      * @param string $table_name
@@ -112,9 +127,13 @@ class CommonSQLQueries extends ConnectionDB
     public  function break_connection()
     {
         parent::break_connection();
-        return null;
+        
     }
 }
+/**#@-
+ * End of Class CommonSQLQueries
+ */
+
 
 
 //        // Ensayo del código. Seleccionar contenido de una Tabla...
