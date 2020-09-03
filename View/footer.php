@@ -37,7 +37,7 @@
     <script src="Public/datatables/vfs_fonts.js" type="text/javascript"></script>
     <script src="Public/javascript/bootbox.min.js" type="text/javascript"></script>
     <script src="Public/javascript/jquery.toast.js" type="text/javascript"></script>
-    
+    <script src="Public/javascript/jquery.toast.js" type="text/javascript"></script>
   </body>
 </html>
 

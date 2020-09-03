@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-require_once './Config/ConnectionDB.php';
+require_once '../Config/ConnectionDB.php';
 /**#@+
  * Description of CommonSQLQueries:...
  * CommonSQLQueries Inherit from the ConnectionDB class to initialize the connection to the Database
@@ -38,7 +36,7 @@ class CommonSQLQueries extends ConnectionDB
      */
     public function select_all($table_name)
     {
-        $query = "SELECT * FROM $table_name ORDER BY id DESC";
+        $query = "SELECT * FROM $table_name";
         parent::general_query($query);
     }
     
@@ -81,6 +79,7 @@ class CommonSQLQueries extends ConnectionDB
     public function count_by_field($name_table,$field_name,$word)
     {
         $query = "SELECT COUNT(*) AS number FROM $name_table WHERE $field_name='$word'";
+        
         parent::general_query($query);
     }
     
@@ -136,47 +135,49 @@ class CommonSQLQueries extends ConnectionDB
 
 
 
-//        // Ensayo del código. Seleccionar contenido de una Tabla...
-//       $objetc = new CommonSQLQueries();
-//       $query = $objetc->select_all('category');
-//       $response = $objetc->get_response();
-//       
-//      
-//     
-//       // retorna false cuando no encuentra una tabla con el nombre solicitado
+        // Ensayo del código. Seleccionar contenido de una Tabla...
+//       $object = new CommonSQLQueries();
+//       $query = $object->select_all('category');
+//       $response = $object->get_response();
+       
+      
+     
+       // retorna false cuando no encuentra una tabla con el nombre solicitado
 //       if($response == FALSE)
 //       {
-//           //echo'<br>No Se encuentra una tabla con ese Nombre en la BD:... ';
-//           //var_dump($response);
-//        
-//           $error = $objetc->get_error();
+           //echo'<br>No Se encuentra una tabla con ese Nombre en la BD:... ';
+           //var_dump($response);
+//           echo 'no existe la tabla';
+//           $error = $object->get_error();
 //           echo $error[2];
 //       
 //      // Si consultamos de nuevo vemos que no se obtiene porque ya rompimos la conexión
-//       //$objetc->break_connection();
+//       $object->break_connection();
 //       echo '<br>nueva consultassss ...<br> respuesta:... ';
-//       $new_query = $objetc->select_all('category');
-//       $new_response = $objetc->get_response();
+//       $new_query = $object->select_all('category');
+//       $new_response = $object->get_response();
 //       
 //       var_dump($new_response);
 //       echo '<br>Error:... ';
-//       var_dump($objetc->get_error());
+//       var_dump($object->get_error());
 //       }
-//       // en caso contrario Retorna el objeto completo
+       // en caso contrario Retorna el objeto completo
 //       else
 //       {
-//           
-//           var_dump($response);
-//       // Si consultamos de nuevo vemos que no se obtiene porque ya rompimos la conexión
-//       //$break = $objetc->break_connection();
+//           while($datos =$response->fetchobject())
+//           {
+//               echo '<br>'.$datos->name;
+//           }
+           //var_dump($response->fetchall());
+         
+       // Si consultamos de nuevo vemos que no se obtiene porque ya rompimos la conexión
+       //$break = $objetc->break_connection();
 //       echo '<br>el final...';
-//       var_dump($objetc->break_connection());
+//       var_dump($object->break_connection());
 //       echo '<br>Nueva consu';
-//       $new_query = $objetc->select_all('category');
-//       $new_response = $objetc->get_response();
+//       $new_query = $object->select_all('category');
+//       $new_response = $object->get_response();
 //       echo '<br>nueva consulta ...<br> respuesta:... ';
 //       
 //       var_dump($new_response);
-//       
-//       }
- 
+//     }

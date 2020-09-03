@@ -18,6 +18,10 @@
 //Inicialmente capturamos los datos provenientes de la capa View...
 //Initially we capture the data coming from the Views layer.
 $view_data = $_POST;
+if(empty($view_data))
+{
+    exit('No hay Datos para procesar');
+}
 
 //capturar el valor de la clave "option"
 //capture the value of the "option" key
@@ -25,14 +29,14 @@ $option = $view_data["option"];
 
 //Condicionar el contenido de la var "option" para obtener la herencia requerida
 //Condition the content of the "option" variable to obtain the required inheritance
-
 /**#@+
  * Bloque condicional de la variable $opción para heredar de la clase CommonSQLSQueries
  * Conditional block of variable $option to inherit from CommonSQLSQueries class
  */
-IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option=='update_state' || $option=='repeat')
-{
-    require_once '../../Model/CommonSQLQueries.php';
+
+if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option=='update_state' || $option=='repeat')
+{ 
+    require_once '../Model/CommonSQLQueries.php';
     
     /*
      * Clase que hereda de CommonSQLQueries
@@ -78,8 +82,8 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
              * @var bool new_state
              */
             $option = self::$data_process["option"];
-            $search_words = self::$data_process["words"];
-            $search_field_name = self::$data_process["search_field_name"];
+            $search_words = self::$data_process["word"];
+            $search_field_name = self::$data_process["search_field"];
             $id_cat = self::$data_process["id_cat"];
             $actual_state = self::$data_process["actual_state"];
             $new_state = self::$data_process["new_state"];
@@ -88,7 +92,7 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
             
             switch ($option) 
             {
-                case "Select_all":
+                case "select_all":
                     parent::select_all('category');
                     break;
                 
@@ -107,6 +111,7 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
                     parent::update_state('category', $field_PK, $id_cat, $new_state);
                     break;
             }
+            
         }
         
         /**
@@ -126,7 +131,7 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
          */
         public function get_error()
         {
-            parent::get_error();
+            return parent::get_error();
         }
         
         /**
@@ -150,30 +155,43 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
     $ObjectCat->process();
     $response = $ObjectCat->get_response();
     
-    IF ($response==FALSE || $response==NULL)
+    if($response==FALSE || $response==NULL)
     {
         $response = $ObjectCat->get_error();
     }
-    if($option=='by_id' || $option=='repeat')
+    if($option=='by_id')
     {
         //utilizamos JSon para codificar mediante clave-Valor un registro
-        $response = json_encode($response);
+        //$response = json_encode($response);
+        $response = $response->fetchobject();
     }
+        if($option=='repeat')
+    {
+        //utilizamos JSon para codificar mediante clave-Valor un registro
+        //$response = json_encode($response);
+        $number = $response->fetchobject();
+        $response = $number->number;
+    }
+    
+    
     /**#@+
      * obtener un array de datos a partir de un objeto
      * get an array of data from an object
      */
-    elseif ($option=='select_all' || $option=='by_state')
+    if ($option=='select_all' || $option=='by_state')
     {
         $dataset = Array();
-        while($data_row=$response->fetch_object())
+        while($data_row=$response->fetchobject())
         {
+            //echo '<br>'.$data_row->name;
             if($data_row->status=='1')
             {
+                
                 $status = 1;
             }
             else
             {
+                //echo '0';
                 $status = 0;
             }
             $dataset[] = array
@@ -189,7 +207,7 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
                     );
             
         }//end while
-        
+     
         // Configuramos la información para el DataTable.
         $DataTable = array
                 (
@@ -199,8 +217,6 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
                     "aaData"=>$dataset
                 );
         $response = json_encode($DataTable);
-        
-        
     }
     /*#@+
      * end of elseif
@@ -208,7 +224,7 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
     $ObjectCat->break_connection();
     echo $response;
     
-}
+} 
 /**#@-
  * Fin del Condicional superior
  */
@@ -218,8 +234,10 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
  * Conditional block of variable $option to inherit from Category class
  */
  else 
-{
-    require_once '../../Model/Category.php';
+{    
+   
+    require_once '../Model/Category.php';
+    
     class AjaxCategory extends Category
     {
         /**
@@ -253,18 +271,19 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
              * capture form data into independent variables...
              * 
              */
-            $name_cat = self::$data_process["name_cat"];
+            $name_cat = self::$data_process["name"];
             $description = self::$data_process["description"];
             $id_cat = self::$data_process["id_cat"];
             
+            
             if($id_cat=="")
             {
-                parent::new_cat($name_cat, $desciption);
+               
+               parent::new_cat($name_cat, $description);
             }
             else
             {
-                parent::update_cat($id_cat, $name_cat, $description);
-                
+               parent::update_cat($id_cat, $name_cat, $description);  
             }
             
             
@@ -287,7 +306,7 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
          */
         public function get_error()
         {
-            parent::get_error();
+            return parent::get_error();
         }
         
         /**
@@ -303,23 +322,22 @@ IF($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
     }
     
     $ObjectCat = new AjaxCategory($view_data);
+    
     $ObjectCat->process();
     $response = $ObjectCat->get_response();
     if($response==false || $response==null)
     {
-        $response = $ObjectCat->get_error();
+        $error = $ObjectCat->get_error();
+        $response = $error[2];
     }
     else
     {
         $response="Successful";
     }
+
     $ObjectCat->break_connection();
     echo $response;
     
-}
-if(empty($view_data))
-{
-    echo 'No hay Datos';
 }
 
 

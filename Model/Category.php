@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once './Config/ConnectionDB.php';
+
+require_once '../Config/ConnectionDB.php';
 /**
  * Description of category
  * Inherit from the ConnectionDB class to initialize the connection to the Database
  * Hereda de la clase ConexionDB para disparar la conexión a la Base de Datos
  * @author demonscript
  */
+
 class Category extends ConnectionDB
 {
     public function __construct()
@@ -80,7 +82,7 @@ class Category extends ConnectionDB
 //// Prueba de conexión y de ejecución de una Consulta SQL...
 //$objectConection = new Category();
 //
-//$new_category = $objectConection->new_cat();
+//$new_category = $objectConection->new_cat('tornillo', 'goloso 1 pulg');
 //
 //$response = $objectConection->get_response();
 //

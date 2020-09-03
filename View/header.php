@@ -40,6 +40,7 @@
     <link href="Public/datatables/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/>
     <link href="Public/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
     <link href="Public/datatables/responsive.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="Public/css/jquery.toast.css" rel="stylesheet" type="text/css"/>
     
   </head>
   <body class="hold-transition skin-green  sidebar-mini">

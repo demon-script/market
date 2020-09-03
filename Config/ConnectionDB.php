@@ -23,7 +23,7 @@
 //recordemos que el sig "require_once" debe ser como si se 
 //estuviera utilizando desde
 //los archivos contenidos directamente en el directorio "Model"...
-require_once './Config/ConnectData.php';
+require_once '../Config/ConnectData.php';
 
 class ConnectionDB extends ConnectData
 {
@@ -41,12 +41,13 @@ class ConnectionDB extends ConnectData
         //echo 'jjjj <br>';
         try
         { 
-            self::$connex = new PDO('pgsql:dbname='.parent::db_system.';
-                                  host='.parent::server_system.';
-                                  user='.parent::user_system.';
-                                  password='.parent::user_pass
+            self::$connex = new PDO('pgsql:host='.parent::server_system.';
+                                  dbname='.parent::db_system,
+                                  parent::user_system,
+                                  parent::user_pass
                               );
-            //Pejecución para capturar caracteres especiales...
+            //self::$connex->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+            //ejecución para capturar caracteres especiales...
             self::$connex->exec("SET NAMES ".parent::db_charset);
             /*
              * // La siguiente es otra conexión que funciona y tiene nuna sintaxis diferente... 
@@ -61,10 +62,11 @@ class ConnectionDB extends ConnectData
             //echo "Congratulations Successful Connection!!!";
             
         }
-        catch (Exception $failure)
+        catch (PDOException $failure)
         {
-           //echo "error de acceso a PostgreSql...<br> ".$failure->getMessage();
-           header('Location: ../View/error.php?message='.$failure->getMessage());
+           $message_error = $failure->getMessage();
+           echo "error de acceso a PostgreSql...<br> ".$message_error;
+           //header('Location: ../View/error.php?message='.$message_error);
            exit();
         }
         
@@ -81,9 +83,9 @@ class ConnectionDB extends ConnectData
     {
        
             
-            $ejecutar = self::$connex->query($sql_code);
+            $executeSQL = self::$connex->query($sql_code);
             //echo 'ejecutada SQL<br>';
-            self::$responseSQL = $ejecutar;
+            self::$responseSQL = $executeSQL;
             //echo 'consulta '.self::$connex->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
     }
@@ -114,6 +116,7 @@ class ConnectionDB extends ConnectData
             
             if(self::$responseSQL === FALSE)
             {
+                //echo 'NO';
                 self::$failure = self::$connex->errorInfo();
             }
             return self::$responseSQL;
@@ -144,10 +147,16 @@ class ConnectionDB extends ConnectData
 //    
 //        
 //    }
+//    
+//    public function all()
+//    {
+//        $query = "SELECT * FROM category";
+//        parent::general_query($query);
+//    }
 //    public function new_cat()
 //    {
-//        $query = "INSERT INTO category (name, description) VALUES ('Medias pp', 'Ropa intima Femenina');"; 
-//        parent::complete_query($query);
+//        $query = "INSERT INTO category (name, description) VALUES ('ooii', 'Ropa intima Femenina');"; 
+//        parent::general_query($query);
 //    }
 //    public function get_response()
 //    {
@@ -161,7 +170,7 @@ class ConnectionDB extends ConnectData
 //
 //$objectConection = new Insert;
 //
-//$new_category = $objectConection->new_cat();
+//$new_category = $objectConection->all();
 //
 //$response = $objectConection->get_response();
 ////echo var_dump($response);
@@ -177,5 +186,25 @@ class ConnectionDB extends ConnectData
 //}
 //else
 //{
-//    echo 'proceso exitoso';
+//    //$row =0;
+//    $resp_obj = $response->fetchall(PDO::FETCH_OBJ);
+//    var_dump($resp_obj);
+//     while($data_row=$response->fetchall(PDO::FETCH_OBJ))
+//        {
+//         echo 'active ';
+//         
+//         if($data_row->status == '1')
+//            {
+//             echo 'active ';
+//                $status = 1;
+//            }
+//         
+//     }
+//    $respuesta = $response->pg_fetch_object();
+//    var_dump($respuesta);
+////    foreach ($respuesta as $nmcat)
+////    {
+////        echo 'uuuuuuuu';
+////    }
+//    
 //}
