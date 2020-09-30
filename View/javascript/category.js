@@ -131,6 +131,7 @@ function show_records()
                                                 "order":[[0,"asc"]]//organizar registros de manera ascendente por el campo id
                                     }
                                 ).DataTable();
+                       
 }
 
 /**
@@ -230,4 +231,31 @@ function message(nm_cat)
                   );
                             
     }
+
+function show_byID(id_cat)
+{
+    //show_form(true);
+    //show_form(true);
+    //alert("dato "+id_cat);     
+    //el id_cat lo obtengo desde Controller/Category.php con el html que se genera
+    $.post(
+            "../Controller/Category.php",
+            {option:'by_id',id_cat:id_cat,search_field:"id"},
+            function (data,status) 
+            //data es el valor obtenido del servidor mediante POST
+            //contiene el estado de la solicitudstatus("success", "notmodified", "error", "timeout", or "parsererror")
+            {                  
+              data = JSON.parse(data); //formateamos la respuesta como tipo json
+              show_form(true);
+                
+              //mostramos los valores respectivos en cada elemento html:...
+              $("#name").val(data.name);
+              $("#description").val(data.description);
+              $("#id_cat").val(data.id);
+            }
+           );
+ 
+                            
+                           
+}
 initial(); //llamamos a initial en la carga del archivo

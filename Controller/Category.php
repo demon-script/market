@@ -97,7 +97,8 @@ if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
                     break;
                 
                 case "by_id":
-                    parent::select_by_ID('category', $search_field_name, $id_cat);
+                    
+                    parent::select_by_ID('category', $field_PK, $id_cat);
                     break;
                 case "repeat":
                     parent::count_by_field('category', $search_field_name, $search_words);
@@ -143,10 +144,7 @@ if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
             parent::break_connection();
             
         }        
-        // Porqué el método anterios al utilizar autocmpletado me salía así???...
-        // public function break_connection(): \Null {
-        //       parent::break_connection();
-        // }
+
        
     } //end Class
     
@@ -159,18 +157,13 @@ if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
     {
         $response = $ObjectCat->get_error();
     }
-    if($option=='by_id')
+    
+        if($option == 'by_id' || $option=='repeat')
     {
         //utilizamos JSon para codificar mediante clave-Valor un registro
-        //$response = json_encode($response);
-        $response = $response->fetchobject();
-    }
-        if($option=='repeat')
-    {
-        //utilizamos JSon para codificar mediante clave-Valor un registro
-        //$response = json_encode($response);
-        $number = $response->fetchobject();
-        $response = $number->number;
+        $objectDB = $response->fetchobject();
+        $response = json_encode($objectDB);
+        //$response = $number->number;
     }
     
     
@@ -178,35 +171,40 @@ if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
      * obtener un array de datos a partir de un objeto
      * get an array of data from an object
      */
-    if ($option=='select_all' || $option=='by_state')
+    if ($option == 'select_all' || $option == 'by_state')
     {
+        //$data_row= $response->fetchobject();
+        //var_dump($data_row);
+        //echo 'Select all';
         $dataset = Array();
-        while($data_row=$response->fetchobject())
-        {
-            //echo '<br>'.$data_row->name;
-            if($data_row->status=='1')
+        while ($data_row= $response->fetchobject())
             {
-                
-                $status = 1;
-            }
-            else
-            {
-                //echo '0';
-                $status = 0;
-            }
-            $dataset[] = array
-                    (
-                        //implemento una bifurcación IF:...
-                        // "0"=>($status)?:
-                        // De manera que lo correspondiente a true va a continuación del signo de pregunta ?
-                        // y el código que va después de los dos puntos : es para cuando la condición no se cumple:...
-                      "0"=>$status,
-                      "1"=>$data_row->name,
-                      "2"=>$data_row->description,
-                      "3"=>$data_row->status
-                    );
             
-        }//end while
+                if($data_row->status == '1')
+                {
+                    $status = 1;
+                }
+                else
+                {
+                    $status = 0;
+                }
+                $dataset[] = array
+                        (
+                            // con el siguiente código implemento una bifurcación IF:...
+                            // "0"=>($status)?:
+                            // De manera que lo correspondiente a true va a continuación del signo de pregunta ?
+                            // y el código que va después de los dos puntos : es para cuando la condición no se cumple:...
+                           "0"=>($status)?'<button class="btn btn-success fa" title="Editar '.$data_row->name. '" onclick="show_byID('.$data_row->id.')"> <i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i></button>'.
+                            ' <button class="btn btn-success fa" title="Desactivar '.$data_row->name. '" onclick="enable_disable('.$data_row->id.','.$status.')"> <i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>':
+                            '<button class="btn btn-success fa" title="Editar '.$data_row->name. '" onclick="show_byID('.$data_row->id.')"> <i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i></button>'.
+                            ' <button class="btn btn-success fa" title="Activar '.$data_row->name. '" onclick="enable_disable('.$data_row->id.','.$status.')"><i class="fa fa-hand-peace-o" aria-hidden="true"></i></button>',//$data_row->idcategory,
+                           "1"=>$data_row->name,
+                           "2"=>$data_row->description,
+                           // de nuevo implemento la bifurcación o condicional para mostrar la respectiva imágen:...
+                           "3"=>($status)?'<img src="Public/img/enable.png" title="Activa" width="30" height="30" />':'<img src="Public/img/disable.png" title="Inactiva" width="30" height="30" />'
+                           
+                        );
+            }//end while
      
         // Configuramos la información para el DataTable.
         $DataTable = array
@@ -217,11 +215,15 @@ if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
                     "aaData"=>$dataset
                 );
         $response = json_encode($DataTable);
+        //var_dump($response);
+        
     }
     /*#@+
      * end of elseif
      */
     $ObjectCat->break_connection();
+   
+    //var_dump($dataset);
     echo $response;
     
 } 
@@ -276,13 +278,14 @@ if($option=='select_all' || $option=='by_id' || $option=='by_state' || $option==
             $id_cat = self::$data_process["id_cat"];
             
             
-            if($id_cat=="")
+            if($id_cat==="")
             {
                
                parent::new_cat($name_cat, $description);
             }
             else
             {
+                
                parent::update_cat($id_cat, $name_cat, $description);  
             }
             
